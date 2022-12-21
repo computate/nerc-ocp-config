@@ -7,6 +7,8 @@ resources:
   - lokistacks
   - clusterroles
   - clusterrolebindings
+  - serviceaccounts
+  - daemonsets
 commonLabels:
   app.kubernetes.io/name: loki
   app.kubernetes.io/component: lokistack
