@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - lokistack-gateway-auth-delegator.yaml
   - lokistack-tenant-logs.yaml
+  - loki-promtail.yaml
