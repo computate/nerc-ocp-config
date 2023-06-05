@@ -1,0 +1,82 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: log-backup
+  namespace: openshift-logging
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 2
+  template:
+    metadata:
+      name: log-backup
+      creationTimestamp: null
+      labels:
+        job-name: log-backup
+    spec:
+      containers:
+        - name: log-backup
+          image: 'docker.io/minio/mc:latest'
+          env:
+
+            - name: MINIO_DAEMON_USER
+              value: "minio"
+            - name: MINIO_DAEMON_GROUP
+              value: "minio"
+            - name: SRC_ENDPOINT
+              value: "https://s3.openshift-storage.svc"
+            - name: SRC_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: openshift-logging-objectbucketclaim
+                  key: BUCKET_NAME
+            - name: SRC_ACCESS_ID
+              valueFrom:
+                secretKeyRef:
+                  name: openshift-logging-objectbucketclaim
+                  key: AWS_ACCESS_KEY_ID
+            - name: SRC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openshift-logging-objectbucketclaim
+                  key: AWS_SECRET_ACCESS_KEY
+
+            - name: DEST_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: log-backup
+                  key: S3_ENDPOINT
+            - name: DEST_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: log-backup
+                  key: S3_BUCKET
+            - name: DEST_ACCESS_ID
+              valueFrom:
+                secretKeyRef:
+                  name: log-backup
+                  key: AWS_ACCESS_KEY_ID
+            - name: DEST_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: log-backup
+                  key: AWS_SECRET_ACCESS_KEY
+
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+          serviceAccountName: default
+          command:
+            - "/bin/sh"
+            - "-c"
+          args:
+            - "mc -C /tmp/.mc alias set openshift $SRC_ENDPOINT $SRC_ACCESS_ID $SRC_SECRET_KEY; mc -C /tmp/.mc alias set backup $DEST_ENDPOINT $DEST_ACCESS_ID $DEST_SECRET_KEY; mc -C /tmp/.mc mirror --overwrite openshift/$SRC_BUCKET backup/$DEST_BUCKET"
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext:
+        privileged: true
+      schedulerName: default-scheduler
+  completionMode: NonIndexed
+  suspend: false
