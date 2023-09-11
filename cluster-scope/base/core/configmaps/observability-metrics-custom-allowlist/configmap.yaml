@@ -11,10 +11,12 @@ data:
       - kube_persistentvolumeclaim_info
       - kube_storageclass_info
       - kubelet_volume_stats_used_bytes
+      - node_memory_MemTotal_bytes
       - node_network_receive_bytes_total
       - node_network_transmit_bytes_total
       - node_network_transmit_errs_total
       - node_network_transmit_packets_total
+      - kube_pod_container_info
     matches:
       - __name__=~"(ipmi_.*)"
       - __name__=~"(ceph_.*)"

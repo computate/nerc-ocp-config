@@ -5,11 +5,29 @@ commonLabels:
 
 resources:
 - apiserver/cluster.yaml
+- clusterversion.yaml
 - ../common
+- ../../bundles/koku-metrics-operator
+- ../../bundles/curator
 - ../../bundles/patch-operator
+- externalsecrets/
 - ../../bundles/rhods-operator
+- ../../bundles/node-feature-discovery
+- ../../bundles/nvidia-gpu-operator
 - feature/odf
 - machineconfigs/disable-net-ifnames
 - machineconfigs/udev-rules
 - machineconfigs/configure-bond0
 - nodenetworkconfigurationpolicies/vlan-2175-nese.yaml
+- secretstores
+- clusterpolicies
+- nodefeaturediscoveries
+
+patches:
+- path: oauths/cluster_patch.yaml
+- target:
+    kind: SecretStore
+  patch: |
+    - op: replace
+      path: /spec/provider/vault/auth/kubernetes/mountPath
+      value: kubernetes/nerc-ocp-test

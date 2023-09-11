@@ -8,6 +8,14 @@ resources:
 - ../../bundles/acct-mgt
 - ../../bundles/patch-operator
 - ../../bundles/xdmod-reader
+- ../../bundles/solr-helm-repo
+- ../../bundles/ansible-automation-platform-operator
+- ../../bundles/openshift-serverless-operator
+- ../../bundles/amq-broker-rhel8-operator
+- ../../bundles/crunchy-postgres-operator
+- ../../bundles/amq-streams-operator
+- ../../bundles/openshift-pipelines-operator
+- ../../bundles/rhods-operator
 - feature/odf
 - feature/custom-routes
 - ../../base/core/namespaces/openshift-gitops
@@ -20,6 +28,7 @@ resources:
 - clusterversion.yaml
 - certificates
 - consolelinks
+- odhdashboardconfigs
 
 components:
   - ../../components/argocd-skip-dryrun
@@ -36,3 +45,10 @@ configMapGenerator:
 patches:
 - path: ingresscontrollers/default_patch.yaml
 - path: oauths/cluster_patch.yaml
+- path: kubeletconfigs/system-reserved-patch.yaml
+- target:
+    kind: SecretStore
+  patch: |
+    - op: replace
+      path: /spec/provider/vault/auth/kubernetes/mountPath
+      value: kubernetes/nerc-ocp-prod

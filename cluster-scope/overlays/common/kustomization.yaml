@@ -21,3 +21,4 @@ resources:
 - clusterrolebindings/nerc-logs-metrics-open-cluster-management-cluster-manager-admin.yaml
 - groupsyncs
 - machineconfigs
+- kubeletconfigs
