@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: keycloak-permissions
-  namespace: keycloak
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
@@ -55,4 +54,3 @@ spec:
                   -e ADMIN_USERNAME="$ADMIN_USERNAME" \
                   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
                   -e VALIDATE_CERTS="$VALIDATE_CERTS"
-
