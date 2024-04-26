@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: curator-system
 resources:
   - deployments
-  - externalsecrets
+  - postgrescluster
   - pvcs
   - rolebindings
   - roles
