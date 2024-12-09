@@ -11,4 +11,7 @@ configMapGenerator:
 
 patches:
   - path: externalsecrets/patch-minio-admin-credentials.yaml
+<<<<<<< HEAD
   - path: persistentvolumeclaims/patch-pvc.yaml
+=======
+>>>>>>> 09d2be4 (feat: add minio to nerc-ocp-obs cluster)
